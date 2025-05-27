@@ -1,0 +1,11 @@
+contextily==1.6.2
+geopandas==1.0.1
+geopy==2.4.1
+joblib==1.4.2
+kaggle==1.7.4.5
+matplotlib==3.10.3
+numpy==2.2.6
+ortools==9.12.4544
+pandas==2.2.3
+scikit_learn==1.6.1
+Shapely==2.1.1

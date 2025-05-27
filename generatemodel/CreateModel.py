@@ -50,8 +50,7 @@ coords_list = data.values.tolist()
 X = []
 y = []
 
-#number of training samples
-#subset of 5-10 locations
+#number of training samples: subset of 5-10 locations
 for _ in range(200):  
     subset = random.sample(coords_list, random.randint(5, 10))  
     length = compute_tsp_length(subset)
@@ -66,7 +65,7 @@ for _ in range(200):
 model = LinearRegression()
 model.fit(X, y)
 
-# Save the model in the 'models' folder
+#Save the model in the 'models' folder
 models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../models'))
 model_path = os.path.join(models_dir, 'pathing_model.pkl')
 joblib.dump(model, model_path)

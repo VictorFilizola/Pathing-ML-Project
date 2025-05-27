@@ -11,7 +11,9 @@ from geopy.distance import geodesic
 import threading
 import os
 from datetime import datetime
+import joblib  
 
+#Geocode addresses to get their coordinates
 def compute_distance_matrix(coords):
     n = len(coords)
     matrix = np.zeros((n, n))
@@ -20,6 +22,7 @@ def compute_distance_matrix(coords):
             matrix[i][j] = geodesic(coords[i], coords[j]).km
     return matrix
 
+#Uses model to solve the pathing problem
 def solve_tsp(distance_matrix):
     n = len(distance_matrix)
     manager = pywrapcp.RoutingIndexManager(n, 1, 0)
@@ -46,13 +49,13 @@ def solve_tsp(distance_matrix):
     route.append(route[0]) 
     return route
 
+#Plots the route on a map and saves it as a PDF
 def plot_route_with_map(coords, route, location_names, filename=None):
     if filename is None:
-        # Generate filename with current date
         current_date = datetime.now().strftime("%Y-%m-%d")
         filename = f"GeneratedPathing_{current_date}.pdf"
 
-    # Ensure the file is saved in the "models" directory
+    #Ensure the file is saved in the "outputs" directory
     models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../outputs'))
     if not os.path.exists(models_dir):
         os.makedirs(models_dir)
@@ -68,7 +71,7 @@ def plot_route_with_map(coords, route, location_names, filename=None):
 
     fig = plt.figure(figsize=(10, 12))
 
-    # Create table at top 30% of figure
+    #Create table at top 30% of figure
     ax_table = fig.add_axes([0.1, 0.7, 0.8, 0.25]) 
     ax_table.axis('off')
 
@@ -82,7 +85,7 @@ def plot_route_with_map(coords, route, location_names, filename=None):
     table.set_fontsize(10)
     table.scale(1, 1.5)
 
-    # Create map at bottom 70% of figure
+    #Create map at bottom 70% of figure
     ax_map = fig.add_axes([0.05, 0.05, 0.9, 0.6])
 
     gdf_line.plot(ax=ax_map, linewidth=3, alpha=0.7, color='blue')
@@ -122,6 +125,20 @@ class RouteApp:
 
         self.geolocator = Nominatim(user_agent="route_planner_app")
 
+        #Load the model
+        self.model = self.load_model()
+
+    def load_model(self):
+        try:
+            model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../models/pathing_model.pkl'))
+            model = joblib.load(model_path)
+            print("Model loaded successfully.")
+            return model
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to load model: {e}")
+            return None
+        
+    #Geocode addresses to get their coordinates
     def geocode_addresses(self, addresses):
         coords = []
         for addr in addresses:
@@ -140,6 +157,7 @@ class RouteApp:
     def run(self):
         threading.Thread(target=self._run).start()
 
+    #Keep the GUI open while processing
     def _run(self):
         self.status_label.config(text="Geocoding addresses...")
         addresses = self.text.get("1.0", tk.END).strip().split("\n")
@@ -164,6 +182,7 @@ class RouteApp:
             messagebox.showerror("Error", str(e))
             self.status_label.config(text="")
 
+#Main function to run the GUI
 if __name__ == "__main__":
     root = tk.Tk()
     app = RouteApp(root)

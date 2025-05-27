@@ -1,7 +1,7 @@
-# My Data Science Project
+# Pathing Machine Learning Project
 
 ## Overview
-This project demonstrates an end-to-end data science workflow, including data ingestion, machine learning model creation, and a front-end application for user interaction. The application allows users to input addresses, generate optimized routes, and export them as PDF files.
+This project demonstrates an end-to-end machine learning project workflow, including data ingestion, machine learning model creation and a front-end application for user interaction. The application allows users to input addresses, generate optimized routes and export them as PDF files.
 
 ## Project Structure
 ```

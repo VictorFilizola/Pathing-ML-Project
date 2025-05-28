@@ -58,3 +58,5 @@ my-data-science-project
 - **Model Creation**: Builds a machine learning model (`pathing_model.pkl`) using the imported dataset.
 - **PDF Generation**: Provides a user-friendly interface for generating PDF files based on the model's output.
 - **Routing Application**: Allows users to input addresses and generate optimized routes in PDF format.
+
+![alt text](Flowchart.png)

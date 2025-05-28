@@ -52,8 +52,8 @@ def solve_tsp(distance_matrix):
 #Plots the route on a map and saves it as a PDF
 def plot_route_with_map(coords, route, location_names, filename=None):
     if filename is None:
-        current_date = datetime.now().strftime("%Y-%m-%d")
-        filename = f"GeneratedPathing_{current_date}.pdf"
+        current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"GeneratedPathing_{current_datetime}.pdf"
 
     #Ensure the file is saved in the "outputs" directory
     models_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../outputs'))
@@ -123,7 +123,7 @@ class RouteApp:
         self.status_label = tk.Label(root, text="", fg="blue")
         self.status_label.pack()
 
-        self.geolocator = Nominatim(user_agent="route_planner_app")
+        self.geolocator = Nominatim(user_agent="route_planner_app", timeout=10)
 
         #Load the model
         self.model = self.load_model()
@@ -180,6 +180,7 @@ class RouteApp:
 
         except Exception as e:
             messagebox.showerror("Error", str(e))
+            print(e)
             self.status_label.config(text="")
 
 #Main function to run the GUI
